@@ -1,5 +1,7 @@
 {-# LANGUAGE LambdaCase #-}
-module Dibujo (
+-- Exporta los constructores de datos de Dibujo y las funciones definidas
+-- para ser utilizadas en otros modulos
+module Dibujo ( 
     Dibujo,
     figura, rotar, espejar, rot45, apilar, juntar, encimar,
     r180, r270,
@@ -28,29 +30,30 @@ data Dibujo a =  Borrar
 		deriving (Eq, Show)
 
 -- Agreguen los tipos y definan estas funciones
+-- Construcción de dibujo. Abstraen los constructores
+borrar :: (Dibujo a) -> (Dibujo a)
+borrar fig = Borrar
 
--- Construcción de dibujo. Abstraen los constructores.
+figura :: (a -> Dibujo a)
+figura fig = Figura fig
 
---figura :: (a -> Dibujo a) -- (???)
---figura =
+rotar :: (Dibujo a) -> (Dibujo a)
+rotar dib = Rotar dib
 
---rotar :: (Dibujo a) -> (Dibujo a)
---rotar = 
+espejar :: (Dibujo a) -> (Dibujo a)
+espejar dib = Espejar dib
 
---espejar :: (Dibujo a) -> (Dibujo a)
---espejar =
+rot45 :: (Dibujo a) -> (Dibujo a)
+rot45 dib = Rot45 dib
 
---rot45 :: (Dibujo a) -> (Dibujo a)
---rot45 =
+apilar :: (Float) -> (Float) -> (Dibujo a) -> (Dibujo a) -> (Dibujo a)
+apilar num1 num2 dib1 dib2 = Apilar num1 num2 dib1 dib2
 
---apilar :: (Float) -> (Float) -> (Dibujo a) -> (Dibujo a) -> (Dibujo a)
---apilar =
+juntar :: (Float) -> (Float) -> (Dibujo a) -> (Dibujo a) -> (Dibujo a)
+juntar num1 num2 dib1 dib2 = Juntar num1 num2 dib1 dib2
 
---juntar :: (Float) -> (Float) -> (Dibujo a) -> (Dibujo a) -> (Dibujo a)
---juntar =
-
---encimar :: (Dibujo a) -> (Dibujo a) -> (Dibujo a)
---encimar =
+encimar :: (Dibujo a) -> (Dibujo a) -> (Dibujo a)
+encimar dib1 dib2 = Encimar dib1 dib2
 
 
 -- Composicion n-veces de una funcion con si misma. Componer 0 veces
@@ -62,32 +65,26 @@ comp f n a = comp f (n-1) (f a)
 
 -- Rotaciones de múltiplos de 90.
 r180 :: Dibujo a -> Dibujo a
-r180 fig = comp (rotar (2 fig))
+r180 fig = comp Rotar 2 fig
 
 r270 :: Dibujo a -> Dibujo a
-r270 fig = comp rotar 3 fig
+r270 fig = comp Rotar 3 fig
 
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio.
 (.-.) :: Dibujo a -> Dibujo a -> Dibujo a
-(.-.) fig1 fig2 = apilar 100 100 fig1 fig2
--- figura
--- figura
+(.-.) fig1 fig2 = Apilar 100 100 fig1 fig2
 
 -- Pone una figura al lado de la otra, ambas ocupan el mismo espacio.
 (///) :: Dibujo a -> Dibujo a -> Dibujo a
-(///) fig1 fig2 = juntar 100 100 fig1 fig2
--- figura figura
+(///) fig1 fig2 = Juntar 100 100 fig1 fig2
 
 -- Superpone una figura con otra.
 (^^^) :: Dibujo a -> Dibujo a -> Dibujo a
-(^^^) fig1 fig2 = encimar fig1 fig2
--- ffiigguurraa
+(^^^) fig1 fig2 = Encimar fig1 fig2
 
 -- Dadas cuatro figuras las ubica en los cuatro cuadrantes.
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
 cuarteto fig1 fig2 fig3 fig4 = (///) ((.-.) fig1 fig2) ((.-.) fig3 fig4)
--- fig1 fig3
--- fig2 fig4
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a
@@ -100,18 +97,23 @@ ciclar fig = cuarteto (fig) (rotar fig) (r180 fig) (r270 fig)
 
 -- Ver un a como un dibujo (Casteo?)
 figura :: a -> Dibujo a
-figura fig = figura fig
+figura fig = Figura fig
 
--- map para nuestro lenguaje
+-- map para nuestro lenguaje 
+-- (para cada constructor de datos, del constructor de tipos Dibujo)
 mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
 mapDib func Borrar = Borrar
 mapDib func (Figura fig) = Figura (func fig)
 mapDib func (Rotar fig) = Rotar (mapDib func fig)
 mapDib func (Espejar fig) = Espejar (mapDib func fig)
 mapDib func (Rot45 fig) = Rot45 (mapDib func fig)
-mapDib func (Apilar num1 num2 fig1 fig2) = Apilar num1 num2 (mapDib func fig1) (mapDib func fig2)
-mapDib func (Juntar num1 num2 fig1 fig2) = Juntar num1 num2 (mapDib func fig1) (mapDib func fig2)
-mapDib func (Encimar fig1 fig2) = Encimar (mapDib func fig1) (mapDib func fig2)
+mapDib func (Apilar num1 num2 fig1 fig2) = 
+    Apilar num1 num2 (mapDib func fig1) (mapDib func fig2)
+mapDib func (Juntar num1 num2 fig1 fig2) = 
+    Juntar num1 num2 (mapDib func fig1) (mapDib func fig2)
+mapDib func (Encimar fig1 fig2) = 
+    Encimar (mapDib func fig1) (mapDib func fig2)
+
 -- Verificar que satisfaga la siguiente igualdad:
 -- mapDib figura = id (id es la funcion identidad)
 
@@ -123,11 +125,29 @@ foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
        (Float -> Float -> b -> b -> b) -> 
        (b -> b -> b) ->
        Dibujo a -> b
-foldDib =
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Figura dibu) = figura dibu 
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Rotar a) = rotar a  
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Espejar a) = 
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Rot45 a) =
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Apilar num1 num2 dib1 dib2) = 
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Juntar num1 num2 dib1 dib2) = 
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Encimar dib1 dib2) = 
+
+
+
 
 -- Demostrar que `mapDib figura = id`
 mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
 
+
 -- Junta todas las figuras básicas de un dibujo.
 figuras :: Dibujo a -> [a]
-figuras =
+figuras Borrar :: []
+--figuras fig = folDib fig 
+figuras Figura fig = [fig]
+figuras Rotar fig = figuras fig
+figuras Espejar fig = figuras fig
+figuras Rot45 fig = figuras fig
+figuras Apilar _ _ a b = figuras a ++ figuras b
+figuras Juntar _ _ a b = figuras a ++ figuras b
+figuras Encimar a b = figuras a ++ figuras b
