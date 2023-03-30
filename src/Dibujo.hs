@@ -157,15 +157,8 @@ son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento
 -}
 
 -- Junta todas las figuras básicas de un dibujo.
-
-{-
 figuras :: Dibujo a -> [a]
-figuras Borrar = []
-figuras fig = foldDib [fig]
--}
-
-figuras :: Dibujo a -> [a]
-figuras dibu = foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
+figuras (Dibujo dibu) = foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
                where
                     casoFigura :: a -> [a]
                     casoFigura fig = [fig]
