@@ -1,6 +1,7 @@
 {-# LANGUAGE LambdaCase #-}
 -- Exporta los constructores de datos de Dibujo y las funciones definidas
 -- para ser utilizadas en otros modulos
+
 module Dibujo ( 
     Dibujo,
     figura, rotar, espejar, rot45, apilar, juntar, encimar,
@@ -125,29 +126,52 @@ foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
        (Float -> Float -> b -> b -> b) -> 
        (b -> b -> b) ->
        Dibujo a -> b
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Figura dibu) = figura dibu 
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Rotar a) = rotar a  
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Espejar a) = 
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Rot45 a) =
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Figura dibu) = 
+    figura dibu 
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Rotar dibu) = 
+    rotar (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)  
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Espejar dibu) = 
+    espejar (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)
+foldDib figura rotar espejar rotar45 apilar juntar encimar (Rot45 dibu) = 
+    rot45 (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Apilar num1 num2 dib1 dib2) = 
+    apilar num1 num2 (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
+                     (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Juntar num1 num2 dib1 dib2) = 
+    juntar num1 num2 (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
+                     (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Encimar dib1 dib2) = 
-
-
-
+    encimar (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
+            (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
+    
 
 -- Demostrar que `mapDib figura = id`
-mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+-- mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+{-
+Sea mapDib figura = id entonces
 
+Como figura :: a -> Dibujo a
+Al aplicarle la funcion "figura" a todos los elementos de un dibujo, no se realiza
+ninguna modificacion en el mismo, pues como "a" es del tipo Dibujo sus "hojas" 
+son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento.
+-}
 
 -- Junta todas las figuras básicas de un dibujo.
+
+{-
 figuras :: Dibujo a -> [a]
-figuras Borrar :: []
---figuras fig = folDib fig 
-figuras Figura fig = [fig]
-figuras Rotar fig = figuras fig
-figuras Espejar fig = figuras fig
-figuras Rot45 fig = figuras fig
-figuras Apilar _ _ a b = figuras a ++ figuras b
-figuras Juntar _ _ a b = figuras a ++ figuras b
-figuras Encimar a b = figuras a ++ figuras b
+figuras Borrar = []
+figuras fig = foldDib [fig]
+-}
+
+figuras :: Dibujo a -> [a]
+figuras dibu = foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
+               where
+                    casoFigura :: a -> [a]
+                    casoFigura fig = [fig]
+
+                    casoConcat :: Float -> Float -> [a] -> [a] -> [a]
+                    casoConcat _ _ dib1 dib2 = dib1 ++ dib2
+
+                    casoEncimar :: [a] -> [a] -> [a]
+                    casoEncimar dib1 dib2 = dib1 ++ dib2
