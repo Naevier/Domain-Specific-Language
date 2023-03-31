@@ -32,29 +32,27 @@ data Dibujo a =  Borrar
 
 -- Agreguen los tipos y definan estas funciones
 -- Construcción de dibujo. Abstraen los constructores
-borrar :: (Dibujo a) -> (Dibujo a)
-borrar fig = Borrar
 
 figura :: (a -> Dibujo a)
-figura fig = Figura fig
+figura = Figura 
 
-rotar :: (Dibujo a) -> (Dibujo a)
-rotar dib = Rotar dib
+rotar :: Dibujo a -> Dibujo a
+rotar = Rotar
 
-espejar :: (Dibujo a) -> (Dibujo a)
-espejar dib = Espejar dib
+espejar :: Dibujo a -> Dibujo a
+espejar = Espejar
 
-rot45 :: (Dibujo a) -> (Dibujo a)
-rot45 dib = Rot45 dib
+rot45 :: Dibujo a -> Dibujo a
+rot45 = Rot45 
 
-apilar :: (Float) -> (Float) -> (Dibujo a) -> (Dibujo a) -> (Dibujo a)
-apilar num1 num2 dib1 dib2 = Apilar num1 num2 dib1 dib2
+apilar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a
+apilar = Apilar 
 
-juntar :: (Float) -> (Float) -> (Dibujo a) -> (Dibujo a) -> (Dibujo a)
-juntar num1 num2 dib1 dib2 = Juntar num1 num2 dib1 dib2
+juntar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a
+juntar  = Juntar 
 
-encimar :: (Dibujo a) -> (Dibujo a) -> (Dibujo a)
-encimar dib1 dib2 = Encimar dib1 dib2
+encimar :: Dibujo a -> Dibujo a -> Dibujo a
+encimar = Encimar 
 
 
 -- Composicion n-veces de una funcion con si misma. Componer 0 veces
@@ -66,22 +64,22 @@ comp f n a = comp f (n-1) (f a)
 
 -- Rotaciones de múltiplos de 90.
 r180 :: Dibujo a -> Dibujo a
-r180 fig = comp Rotar 2 fig
+r180 = comp Rotar 2 
 
 r270 :: Dibujo a -> Dibujo a
-r270 fig = comp Rotar 3 fig
+r270  = comp Rotar 3
 
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio.
 (.-.) :: Dibujo a -> Dibujo a -> Dibujo a
-(.-.) fig1 fig2 = Apilar 100 100 fig1 fig2
+(.-.) = Apilar 100 100
 
 -- Pone una figura al lado de la otra, ambas ocupan el mismo espacio.
 (///) :: Dibujo a -> Dibujo a -> Dibujo a
-(///) fig1 fig2 = Juntar 100 100 fig1 fig2
+(///)  = Juntar 100 100
 
 -- Superpone una figura con otra.
 (^^^) :: Dibujo a -> Dibujo a -> Dibujo a
-(^^^) fig1 fig2 = Encimar fig1 fig2
+(^^^) = Encimar
 
 -- Dadas cuatro figuras las ubica en los cuatro cuadrantes.
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
@@ -89,16 +87,13 @@ cuarteto fig1 fig2 fig3 fig4 = (///) ((.-.) fig1 fig2) ((.-.) fig3 fig4)
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a
-encimar4 fig = (^^^) ((^^^) (fig) (rotar fig)) ((^^^) (r180 fig) (r270 fig))
+encimar4 fig = (^^^) ((^^^) fig (rotar fig)) ((^^^) (r180 fig) (r270 fig))
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!
 ciclar :: Dibujo a -> Dibujo a
-ciclar fig = cuarteto (fig) (rotar fig) (r180 fig) (r270 fig)
+ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig)
 
--- Ver un a como un dibujo (Casteo?)
-figura :: a -> Dibujo a
-figura fig = Figura fig
 
 -- map para nuestro lenguaje 
 -- (para cada constructor de datos, del constructor de tipos Dibujo)
