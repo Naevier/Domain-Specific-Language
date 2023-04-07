@@ -117,10 +117,10 @@ mapDib func (Encimar fig1 fig2) =
 -- pensar en foldr y las definiciones de Intro a la lógica
 -- foldDib aplicado a cada constructor de Dibujo deberia devolver el mismo dibujo
 foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
-       (Float -> Float -> b -> b -> b) -> 
-       (Float -> Float -> b -> b -> b) -> 
-       (b -> b -> b) ->
-       Dibujo a -> b
+        (Float -> Float -> b -> b -> b) -> 
+        (Float -> Float -> b -> b -> b) -> 
+        (b -> b -> b) ->
+        Dibujo a -> b
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Figura dibu) = 
     figura dibu 
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Rotar dibu) = 
@@ -129,10 +129,12 @@ foldDib figura rotar espejar rotar45 apilar juntar encimar (Espejar dibu) =
     espejar (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Rot45 dibu) = 
     rot45 (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Apilar num1 num2 dib1 dib2) = 
+foldDib figura rotar espejar rotar45 apilar juntar encimar 
+        (Apilar num1 num2 dib1 dib2) = 
     apilar num1 num2 (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
                      (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Juntar num1 num2 dib1 dib2) = 
+foldDib figura rotar espejar rotar45 apilar juntar encimar 
+        (Juntar num1 num2 dib1 dib2) = 
     juntar num1 num2 (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
                      (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
 foldDib figura rotar espejar rotar45 apilar juntar encimar (Encimar dib1 dib2) = 
@@ -153,13 +155,14 @@ son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento
 
 -- Junta todas las figuras básicas de un dibujo.
 figuras :: Dibujo a -> [a]
-figuras (Dibujo dibu) = foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
-               where
-                    casoFigura :: a -> [a]
-                    casoFigura fig = [fig]
+figuras (Dibujo dibu) = 
+    foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
+        where
+            casoFigura :: a -> [a]
+            casoFigura fig = [fig]
 
-                    casoConcat :: Float -> Float -> [a] -> [a] -> [a]
-                    casoConcat _ _ dib1 dib2 = dib1 ++ dib2
+            casoConcat :: Float -> Float -> [a] -> [a] -> [a]
+            casoConcat _ _ dib1 dib2 = dib1 ++ dib2
 
-                    casoEncimar :: [a] -> [a] -> [a]
-                    casoEncimar dib1 dib2 = dib1 ++ dib2
+            casoEncimar :: [a] -> [a] -> [a]
+            casoEncimar dib1 dib2 = dib1 ++ dib2
