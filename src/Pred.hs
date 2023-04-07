@@ -1,39 +1,47 @@
 module Pred (
     Pred,
-    cambiar, anyDib, allDib, orP, andP
+    cambiar, anyDib, allDib, orP, andP, foldGen
 ) where
 
 type Pred a = a -> Bool
 
+
+{-
+En programación funcional estas dos cosas son lo mismo:
+
+f x = algo
+y
+
+f = \x -> algo
+
+-}
+
+-- Generalizacion de un fold bool para dibujos
+foldGen :: Pred a -> (a -> Bool) -> Dibujo a -> Bool
+foldGen pred func dibujo = foldGen (pred dibujo) (pred dibujo) 
+            (pred dibujo) (pred dibujo) apilar_juntar apilar_juntar caso_encimar
+        where
+            apilarJuntar :: (a -> Bool) -> Pred a -> Float -> Float -> Dibujo a -> Dibujo a -> Bool
+            apilarJuntar func predicado _ _ dibu1 dibu2 = (func) (predicado dibu1) (predicado dibu2)
+
+            casoEncimar :: (a -> Bool) -> Pred a ->  Dibujo a -> Dibujo a -> Bool
+            casoEncimar func predicado dibu1 dibu2 = (func) (predicado dibu1) (predicado dibu2) 
+
 -- Dado un predicado sobre básicas, cambiar todas las que satisfacen
 -- el predicado por la figura básica indicada por el segundo argumento
 cambiar :: Pred a -> a -> Dibujo a -> Dibujo a
-cambiar predicado basica dibujo = 
-        mapDib(\hoja -> if predicado dibujo then basica else hoja)  -- VER
+cambiar predicado basica dibujo = if foldGen(esBasica (&&) dibujo) && predicado dibujo then basica else cambiar predicado basica dibujo
+
+esBasica :: Dibujo a -> Bool
+esBasica dibu = dibu == Figura 
 
 -- Alguna básica satisface el predicado.
 anyDib :: Pred a -> Dibujo a -> Bool
-anyDib pred dibujo = 
-    foldDib (pred dibujo) (pred dibujo) 
-            (pred dibujo) (pred dibujo) apilar_juntar apilar_juntar caso_encimar
-        where
-            apilar_juntar :: Pred a -> Float -> Float -> Dibujo a -> Dibujo a -> Bool
-            apilar_juntar predicado _ _ dibu dibu = predicado dibu || predicado dibu
-
-            caso_encimar :: Pred a -> Dibujo a -> Dibujo a -> Bool
-            caso_encimar predicado dibu1 dibu2 = predicado dibu1 || predicado dibu2
+anyDib pred dibujo = foldGen pred (||)
 
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool 
-allDib pred dibu = 
-    foldDib (pred dibu) (pred dibu) 
-            (pred dibu) (pred dibu) casoDoble casoDoble casoEncimar dibu 
-        where
-            casoDoble :: Pred a -> b -> b -> Dibujo a -> Dibujo a -> Bool
-            casoDoble pred _ _ dibu1 dibu2 = pred dibu1 && pred dibu2
-
-            casoEncimar :: Pred a -> Dibujo a -> Dibujo a -> Bool
-            casoEncimar pred dib1 dib2 = pred dibu1 && pred dibu2
+allDib pred dibu = foldGen pred (&&)  
 
 -- Los dos predicados se cumplen para el elemento recibido.
 andP :: Pred a -> Pred a -> a -> Bool

@@ -21,13 +21,13 @@ Gramática de las figuras:
 -}
 
 data Dibujo a =  Borrar
-		| Figura (a)
-		| Rotar (Dibujo a) -- Rotar 90
-		| Espejar (Dibujo a)
-		| Rot45 (Dibujo a)
-		| Apilar (Float) (Float) (Dibujo a) (Dibujo a)
-		| Juntar (Float) (Float) (Dibujo a) (Dibujo a)
-		| Encimar (Dibujo a) (Dibujo a)
+		| Figura a
+		| Rotar Dibujo a -- Rotar 90
+		| Espejar Dibujo a
+		| Rot45 Dibujo a
+		| Apilar Float Float Dibujo a Dibujo a
+		| Juntar Float Float Dibujo a Dibujo a
+		| Encimar Dibujo a Dibujo a
 		deriving (Eq, Show)
 
 -- Agreguen los tipos y definan estas funciones

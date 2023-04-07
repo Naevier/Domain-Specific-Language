@@ -8,10 +8,6 @@ To Do:
 > 4) Responder preguntas e informe en README.md
 
 
-> Generalizacion de foldDib para hacer un filter mas general, con menos argumentos
-> Revisar funcion "cambiar" en Pred.hs
-
-
 > Revision general (lineas menos de 80 caracteres, rehuso de funciones, comentarios solo sobre codigo, limpiar repo de archivos como este, etc)
 > Repaso conceptual y sobre el codigo 
 > Otra figura? (punto estrella)
@@ -19,10 +15,18 @@ To Do:
 
 ---- Preguntas
 
-> Establecer la relacion entre Picture (de Gloss) y nuestro Figura?
+> Establecer la relacion entre Picture (de Gloss) y nuestro Figura? -> Nos permitiria usar el tipo FloatingPic
 > Establecer la relacion entre figuras (de Gloss) y nuestro foldDib?
 > Generalizacion en "filter" de foldDib
-> Union en la semantica de las funciones de interpretacion grafica 
+> Funcion cambiar en Pred
+-- Parametro "func" de la funcion "foldGen"
+
+
+
+---- Ya respondidas
+
+// Union en la semantica de las funciones de interpretacion grafica -> figuras
+funcion "figuras" de Gloss (imprime ambas cosas en el mismo "cuadrado")
 
 /// > En los constructores Apilar y Juntar, hay dos campos de tipo Float ¿Cuál es la funcion de estos dos Float?
 proporciones de tamaño, por ej si Juntar 1.0 2.0, la segunda columna ocupa el doble de tamaño que la primera

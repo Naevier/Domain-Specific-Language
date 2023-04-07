@@ -44,27 +44,27 @@ interp = undefined
 ------------------------- Si tomamos Figura = Picture, entonces se pueden reducir usando el tipo FloatingPic
 -- Deberiamos definir el "+" "-" "/" "*" para aplicarlas sobre vectores, no?
 
-rotar_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura {{{?}}}
+rotar_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura
 rotar_interp (f) (x, w, h) = f (x+w, h, -w)
 
-rot45_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura {{{?}}}
+rot45_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura
 rot45_interp (f) (x, w, h) = f (x+(w+h)/2, (w+h)/2, (h-w)/2)
 
-espejar_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura {{{?}}}
+espejar_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura
 espejar_interp (f) (x, w, h) = f (x+w, -w, h)
 
-encimar_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura {{{?}}}
-encimar_interp (f, g) (x, w, h) = f (x, w, h) {{{∪}}} g(x, w, h)
+encimar_interp :: (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura
+encimar_interp (f, g) (x, w, h) = figuras [f (x, w, h), g(x, w, h)]
 
-juntar_interp :: Float -> Float -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura {{{?}}}
-juntar_interp (n, m, f, g) (x, w, h) = f (x, w', h) {{{∪}}} g (x+w', r'*w, h) 
+juntar_interp :: Float -> Float -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura
     where 
-        r' = n/(m+n)
+        r' :: 
+        r' n m = n/(m+n)
         r  = m/(m+n)
         w' = r*w
 
-apilar_interp :: Float -> Float -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura {{{?}}}        
-apilar_interp (n, m, f, g) (x, w, h) = f (x + h', w, r*h) {{{∪}}} g (x, w, h') 
+apilar_interp :: Float -> Float -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector -> Figura) -> (Vector -> Vector -> Vector) -> Figura     
+apilar_interp (n, m, f, g) (x, w, h) = figuras [f (x + h', w, r*h), g (x, w, h')]
     where 
         r' = n/(m+n)
         r  = m/(m+n)
