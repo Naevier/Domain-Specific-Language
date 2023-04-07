@@ -21,13 +21,13 @@ Gramática de las figuras:
 -}
 
 data Dibujo a =  Borrar
-		| Figura a
-		| Rotar Dibujo a -- Rotar 90
-		| Espejar Dibujo a
-		| Rot45 Dibujo a
-		| Apilar Float Float Dibujo a Dibujo a
-		| Juntar Float Float Dibujo a Dibujo a
-		| Encimar Dibujo a Dibujo a
+		| Figura (a)
+		| Rotar (Dibujo a) -- Rotar 90
+		| Espejar (Dibujo a)
+		| Rot45 (Dibujo a)
+		| Apilar (Float) (Float) (Dibujo a) (Dibujo a)
+		| Juntar (Float) (Float) (Dibujo a) (Dibujo a)
+		| Encimar (Dibujo a) (Dibujo a)
 		deriving (Eq, Show)
 
 -- Agreguen los tipos y definan estas funciones
@@ -154,9 +154,10 @@ son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento
 -}
 
 -- Junta todas las figuras básicas de un dibujo.
+
 figuras :: Dibujo a -> [a]
-figuras (Dibujo dibu) = 
-    foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
+figuras dibu = 
+    foldDib casoFigura id id id casoConcat casoConcat casoEncimar
         where
             casoFigura :: a -> [a]
             casoFigura fig = [fig]
