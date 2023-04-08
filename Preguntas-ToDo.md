@@ -8,7 +8,7 @@ To Do:
 > 4) Responder preguntas e informe en README.md
 
 
-> Revision general (lineas menos de 80 caracteres, rehuso de funciones, comentarios solo sobre codigo, limpiar repo de archivos como este, etc)
+> Revision general (borrar comentarios, lineas menos de 80 caracteres, rehuso de funciones, comentarios solo sobre codigo, limpiar repo de archivos como este, etc)
 > Repaso conceptual y sobre el codigo 
 > Otra figura? (punto estrella)
 
@@ -21,6 +21,10 @@ To Do:
 > Funcion cambiar en Pred
 -- Parametro "func" de la funcion "foldGen"
 
+
+---- Informe
+> Uso de GPT (resultados erroneos, contradicciones, explicaciones)
+> Generalizacion en Pred.hs con funciones auxiliarAnyAll y cambioBasica
 
 
 ---- Ya respondidas

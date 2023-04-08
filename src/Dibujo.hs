@@ -32,7 +32,6 @@ data Dibujo a =  Borrar
 
 -- Agreguen los tipos y definan estas funciones
 -- Construcción de dibujo. Abstraen los constructores
-
 figura :: (a -> Dibujo a)
 figura = Figura 
 
@@ -157,7 +156,7 @@ son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento
 
 figuras :: Dibujo a -> [a]
 figuras dibu = 
-    foldDib casoFigura id id id casoConcat casoConcat casoEncimar
+    foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
         where
             casoFigura :: a -> [a]
             casoFigura fig = [fig]

@@ -16,7 +16,6 @@ import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 type FloatingPic = Vector -> Vector -> Vector -> Picture
 type Output a = a -> FloatingPic
-type Vecs = Vector -> Vector -> Vector
 
 -- el vector nulo
 zero :: Vector
