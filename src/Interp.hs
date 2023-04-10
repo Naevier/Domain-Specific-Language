@@ -64,7 +64,7 @@ interp a x w h dibu = foldDib figura_interp rotar_interp espejar_interp rot45_in
 
         rot45_interp :: FloatingPic -> FloatingPic
         rot45_interp (f) (x, w, h) = 
-            f(x V.+ 0.5 V.*(w V.+ h), 0.5 V.*(w V.+ h), 0.5 V.*(h V.negate w))
+            f(x V.+ half(w V.+ h), half(w V.+ h), half(h V.negate w))
 
         apilar_interp :: 
             Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic   

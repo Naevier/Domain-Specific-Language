@@ -21,14 +21,14 @@ Gramática de las figuras:
 -}
 
 data Dibujo a =  Borrar
-		| Figura (a)
-		| Rotar (Dibujo a) -- Rotar 90
-		| Espejar (Dibujo a)
-		| Rot45 (Dibujo a)
-		| Apilar (Float) (Float) (Dibujo a) (Dibujo a)
-		| Juntar (Float) (Float) (Dibujo a) (Dibujo a)
-		| Encimar (Dibujo a) (Dibujo a)
-		deriving (Eq, Show)
+        | Figura (a)
+        | Rotar (Dibujo a) -- Rotar 90
+        | Espejar (Dibujo a)
+        | Rot45 (Dibujo a)
+        | Apilar (Float) (Float) (Dibujo a) (Dibujo a)
+        | Juntar (Float) (Float) (Dibujo a) (Dibujo a)
+        | Encimar (Dibujo a) (Dibujo a)
+        deriving (Eq, Show)
 
 -- Agreguen los tipos y definan estas funciones
 -- Construcción de dibujo. Abstraen los constructores
@@ -96,7 +96,8 @@ ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig)
 
 -- map para nuestro lenguaje 
 -- (para cada constructor de datos, del constructor de tipos Dibujo)
-mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+{- Cambiamos Dibujo b por b. CHARLARLO -}
+mapDib :: (a -> b) -> Dibujo a -> Dibujo b
 mapDib func Borrar = Borrar
 mapDib func (Figura fig) = Figura (func fig)
 mapDib func (Rotar fig) = Rotar (mapDib func fig)
@@ -120,25 +121,25 @@ foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
         (Float -> Float -> b -> b -> b) -> 
         (b -> b -> b) ->
         Dibujo a -> b
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Figura dibu) = 
-    figura dibu 
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Rotar dibu) = 
-    rotar (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)  
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Espejar dibu) = 
-    espejar (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Rot45 dibu) = 
-    rot45 (foldDib figura rotar espejar rotar45 apilar juntar encimar dibu)
-foldDib figura rotar espejar rotar45 apilar juntar encimar 
-        (Apilar num1 num2 dib1 dib2) = 
-    apilar num1 num2 (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
-                     (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
-foldDib figura rotar espejar rotar45 apilar juntar encimar 
-        (Juntar num1 num2 dib1 dib2) = 
-    juntar num1 num2 (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
-                     (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
-foldDib figura rotar espejar rotar45 apilar juntar encimar (Encimar dib1 dib2) = 
-    encimar (foldDib figura rotar espejar rotar45 apilar juntar encimar dib1) 
-            (foldDib figura rotar espejar rotar45 apilar juntar encimar dib2)
+foldDib figura rotar espejar rot45 apilar juntar encimar (Figura dibu) = figura dibu 
+
+foldDib figura rotar espejar rot45 apilar juntar encimar (Rotar dibu) = rotar (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)  
+
+foldDib figura rotar espejar rot45 apilar juntar encimar (Espejar dibu) = espejar (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)
+
+foldDib figura rotar espejar rot45 apilar juntar encimar (Rot45 dibu) = rot45 (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)
+
+foldDib figura rotar espejar rot45 apilar juntar encimar (Apilar num1 num2 dib1 dib2) = 
+             apilar num1 num2 (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
+            (foldDib figura rotar espejar rot45 apilar juntar encimar dib2) 
+
+foldDib figura rotar espejar rot45 apilar juntar encimar (Juntar num1 num2 dib1 dib2) = 
+    juntar num1 num2 (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
+                     (foldDib figura rotar espejar rot45 apilar juntar encimar dib2)
+                     
+foldDib figura rotar espejar rot45 apilar juntar encimar (Encimar dib1 dib2) = 
+    encimar (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
+            (foldDib figura rotar espejar rot45 apilar juntar encimar dib2)
     
 
 -- Demostrar que `mapDib figura = id`
