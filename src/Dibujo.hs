@@ -2,15 +2,7 @@
 -- Exporta los constructores de datos de Dibujo y las funciones definidas
 -- para ser utilizadas en otros modulos
 
-module Dibujo ( 
-    Dibujo,
-    figura, rotar, espejar, rot45, apilar, juntar, encimar,
-    r180, r270,
-    (.-.), (///), (^^^),
-    cuarteto, encimar4, ciclar,
-    foldDib, mapDib,
-    figuras
-) where
+module Dibujo where
 
 {-
 Gramática de las figuras:
