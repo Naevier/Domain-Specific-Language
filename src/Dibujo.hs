@@ -50,7 +50,7 @@ encimar = Encimar
 -- es la funcion constante, componer 1 vez es aplicar la funcion 1 vez, etc.
 -- Componer negativamente es un error!
 comp :: (a -> a) -> Int -> a -> a
-comp f 1 a = f a
+comp f 0 a = a
 comp f n a = comp f (n-1) (f a)
 
 -- Rotaciones de múltiplos de 90.
@@ -62,19 +62,25 @@ r270  = comp Rotar 3
 
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio.
 (.-.) :: Dibujo a -> Dibujo a -> Dibujo a
-(.-.) = Apilar 100 100
+(.-.) = Apilar 1.0 1.0
+{-
+[f2]
+[f1]
+-}
 
 -- Pone una figura al lado de la otra, ambas ocupan el mismo espacio.
 (///) :: Dibujo a -> Dibujo a -> Dibujo a
-(///)  = Juntar 100 100
-
+(///)  = Juntar 1.0 1.0
+{-
+[f2][f1]
+-}
 -- Superpone una figura con otra.
 (^^^) :: Dibujo a -> Dibujo a -> Dibujo a
 (^^^) = Encimar
 
 -- Dadas cuatro figuras las ubica en los cuatro cuadrantes.
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
-cuarteto fig1 fig2 fig3 fig4 = (///) ((.-.) fig1 fig2) ((.-.) fig3 fig4)
+cuarteto fig1 fig2 fig3 fig4 = (.-.) ((///) fig1 fig2) ((///) fig3 fig4)
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a
@@ -84,7 +90,6 @@ encimar4 fig = (^^^) ((^^^) fig (rotar fig)) ((^^^) (r180 fig) (r270 fig))
 -- No confundir con encimar4!
 ciclar :: Dibujo a -> Dibujo a
 ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig)
-
 
 -- map para nuestro lenguaje 
 -- (para cada constructor de datos, del constructor de tipos Dibujo)

@@ -7,15 +7,17 @@ module Interp (
 
 -- Sistema de coordenadas de Gloss: Origen (0.0) = centro de la ventana
 
-import Graphics.Gloss(Picture, Display(InWindow), Vector, makeColorI, color, pictures, translate, white, display)
+import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, pictures, translate, white, display)
 import Dibujo
 import FloatingPic (FloatingPic, Output, half, grid)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 {-
 interp :: a -> Vector -> Vector -> Vector -> Picture -> Dibujo a -> Output (Dibujo a) 
+
 interp a v1 v2 v3 pic dib = foldDib id rotinterp espinterp rot45interp apinterp juntinterp encinterp dib
-    where 
+
+interp f = foldDib id rotarInterp espejarInterp rotar45interp apilarInterp juntarInterp encimarInterp
 -}
 
 -- Cambios en import Dibujo (esta bien?)
@@ -24,39 +26,40 @@ interp a v1 v2 v3 pic dib = foldDib id rotinterp espinterp rot45interp apinterp 
 -- Ver cambio en consigna de funciones _lado_ y _esquina_ que comentaron en Zulip (corregir del kickstart)
 
 interp :: Output a -> Output (Dibujo a)
+
 interp f (Figura a) = f a
-interp f (Rotar a) = rotinterp (interp f a)
-interp f (Rot45 a) = rot45interp (interp f a)
-interp f (Espejar a) = espinterp (interp f a)
-interp f (Apilar x y a b) = apinterp x y (interp f a) (interp f b)
-interp f (Juntar x y a b) = juntinterp x y (interp f a) (interp f b)
-interp f (Encimar a b) = encinterp (interp f a) (interp f b)
+interp f (Rotar a) = rotarInterp (interp f a)
+interp f (Rot45 a) = rotar45interp (interp f a)
+interp f (Espejar a) = espejarInterp (interp f a)
+interp f (Apilar x y a b) = apilarInterp x y (interp f a) (interp f b)
+interp f (Juntar x y a b) = juntarInterp x y (interp f a) (interp f b)
+interp f (Encimar a b) = encimarInterp (interp f a) (interp f b)
 
-rotinterp :: FloatingPic -> FloatingPic
-rotinterp f x w h = f (x V.+ w) h (V.negate w)
+rotarInterp :: FloatingPic -> FloatingPic
+rotarInterp f x w h = f (x V.+ w) h (V.negate w)
 
-espinterp :: FloatingPic -> FloatingPic
-espinterp f x w h = f (x V.+ w) (V.negate w) h
+rotar45interp :: FloatingPic -> FloatingPic
+rotar45interp f x w h = f (x V.+ half(w V.+ h)) (half (w V.+ h)) (half (h V.- w))
 
-rot45interp :: FloatingPic -> FloatingPic
-rot45interp f x w h = f (x V.+ half(w V.+ h)) (half (w V.+ h)) (half (h V.- w))
+espejarInterp :: FloatingPic -> FloatingPic
+espejarInterp f x w h = f (x V.+ w) (V.negate w) h
 
-apinterp :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic   
-apinterp n m f g x w h = pictures [f (x V.+ h') w (r V.* h), g x w h']
+apilarInterp :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic   
+apilarInterp n m f g x w h = pictures [f (x V.+ h') w (r V.* h), g x w h']
     where 
-        r = n/(n+m)
-        r' = m/(n+m)
+        r' = n/(m+n)
+        r = m/(m+n)
         h' = r' V.* h
 
-juntinterp :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-juntinterp n m f g x w h = pictures [f x w' h, g (x V.+ w') (r' V.* w) h]
+juntarInterp :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
+juntarInterp n m f g x w h = pictures [f x w' h, g (x V.+ w') (r' V.* w) h]
     where 
-        r' = m/(n+m)
-        r = n/(n+m)
+        r' = n/(m+n)
+        r = m/(m+n)
         w' = r V.* w
 
-encinterp :: FloatingPic -> FloatingPic -> FloatingPic
-encinterp f g x w h = pictures [f x w h, g x w h]
+encimarInterp :: FloatingPic -> FloatingPic -> FloatingPic
+encimarInterp f g x w h = pictures [f x w h, g x w h]
 
 -- Configuración de la interpretación
 data Conf = Conf {
