@@ -10,20 +10,28 @@ testRotar = TestCase(assertEqual "Rotar" (Rotar (Figura "Cuadrado")) (rotar(figu
 -- Test Espejar
 testEspejar = TestCase(assertEqual "Espejar" (Espejar (Figura "Cuadrado")) (espejar(figura "Cuadrado")))
 
---ah no para, no tenes que pushear para que lo pueda hacer?
+-- Test Rot45
+testRotar45 = TestCase(assertEqual "Rotar45" (Rot45 (Figura "Cuadrado")) (rot45(figura "Cuadrado")))
 
--- Definición de la función suma
-suma :: Int -> Int -> Int
-suma a b = a + b
+-- Test Apilar
+testApilar = TestCase(assertEqual "Apilar" (Apilar 1.0 1.0 (Figura "Cuadrado") (Figura "Circulo")) (apilar 1.0 1.0 (figura "Cuadrado") (figura "Circulo")))
 
--- Definición de las pruebas
-testSuma :: Test
-testSuma = TestList [
-    TestCase $ assertEqual "Suma de dos números positivos" 5 (suma 2 3),
-    TestCase $ assertEqual "Suma de un número positivo y cero" 3 (suma 3 0),
-    TestCase $ assertEqual "Suma de dos números negativos" (-7) (suma (-3) (-4))
-    ]
+-- Test Juntar
+testJuntar = TestCase(assertEqual "Juntar" (Juntar 1.0 1.0 (Figura "Cuadrado") (Figura "Circulo")) (juntar 1.0 1.0 (figura "Cuadrado") (figura "Circulo")))
+
+-- Test Encimar
+testEncimar = TestCase(assertEqual "Encimar" (Encimar (Figura "Cuadrado") (Figura "Circulo")) (encimar (figura "Cuadrado") (figura "Circulo")))
+
+-- Test Composicion
+testComp = TestCase (assertEqual "Test composicion" (1+1+1) (comp (+1) 3 0))
+
+-- Test r180
+testR180 = TestCase (assertEqual "Test r180" (Rotar(Rotar(Figura "Cuadrado"))) (r180 (figura "Cuadrado")))
+
+-- Test r270
+testR270 = TestCase (assertEqual "Test r270" (Rotar(Rotar(Rotar(Figura "Cuadrado")))) (r270 (figura "Cuadrado")))
 
 
-
+testDibujo = TestList [testFigura, testRotar, testEspejar, testRotar45, testApilar, testJuntar, testComp, testR180, testR270]
 main = runTestTT testDibujo
+

@@ -13,7 +13,7 @@ type Escher = Bool
 
 -- El dibujo u.
 dibujoU :: Dibujo Escher -> Dibujo Escher
-dibujoU = rot45 encimar4 
+dibujoU esch = rot45 (ciclar esch)
 
 --dibujoU p = rot45 (cuarteto p)
 --dibujoU p = cuarteto (rot45 p)
@@ -26,50 +26,45 @@ dibujoU = rot45 encimar4
 
 -- El dibujo t.
 dibujoT :: Dibujo Escher -> Dibujo Escher
-dibujoT esch = rot45 (apilar esch espejar(rotar esch))
-
--- Esquina con nivel de detalle en base a la figura p.
-esquina :: Int -> Dibujo Escher -> Dibujo Escher -- reemplazar rot45 por rotar
-esquina 1 esch = dibujoU esch -- cuarteto(blank, blank, blank, dibujo_u(f))
-esquina n esch = undefined -- cuarteto(esquina(1, f), lado(1, f), rot45(lado(1, f)), dibujo_u(f))
-
--- Lado con nivel de detalle.
-lado :: Int -> Dibujo Escher -> Dibujo Escher -- reemplazar rot45 por rotar
-lado 1 esch = dibujoT esch -- cuarteto(blank, blank, rot45(f), f)
-lado n esch = undefined --  cuarteto(lado(1, f), lado(1, f), rot45(f), f)
-
--- Por suerte no tenemos que poner el tipo!
-noneto p q r s t u v w x = grilla [[p, q, r], [s, t, u], [v, w, x]]
-
-
--- El dibujo de Escher:
-escher :: Int -> Escher -> Dibujo Escher
-escher n esch = p q r s t u v w x
-    where
-        p = esquina
-        q = lado
-        r = undefined
-        s = undefined
-        t = undefined
-        u = undefined
-        v = undefined
-        w = undefined
-        x = undefined
-
-
+dibujoT esch = rot45 (apilar esch (espejar (rotar esch)))
 
 {-
-"implementan los siguientes combinadores, en función de la siguiente descripción de los dos primeros niveles"
-
-lado(1, f) = cuarteto(blank, blank, rot45(f), f)
-lado(2, f) = cuarteto(lado(1, f), lado(1, f), rot45(f), f)
-
-esquina(1, f) = cuarteto(blank, blank, blank, dibujo_u(f))
-esquina(2, f) = cuarteto(esquina(1, f), lado(1, f), rot45(lado(1, f)), dibujo_u(f))
+dibujoT :: Dibujo Escher
+dibujoT = encimar base $ encimar rbase (r270 rbase)
 -}
+
+-- Esquina con nivel de detalle en base a la figura p.
+esquina :: Int -> Dibujo Escher -> Dibujo Escher
+esquina 1 esch = cuarteto Borrar Borrar Borrar (dibujoU esch)
+esquina n esch = cuarteto esquina((n-1) esch) lado((n-1) esch) rotar(lado) dibujoU(esch) -- lado(n-1, esch) esta bien?
+
+-- Lado con nivel de detalle.
+lado :: Int -> Dibujo Escher -> Dibujo Escher
+lado 1 esch = cuarteto Borrar Borrar (rotar esch) esch
+lado n esch = cuarteto (lado (n-1) esch) (lado (n-1) esch) (rotar esch) esch
+
+-- Por suerte no tenemos que poner el tipo!
+noneto p q r s t u v w x = grilla [[p, q, r], 
+                                   [s, t, u], 
+                                   [v, w, x]]
+--noneto p q r s t u v x w = encimar(1, 2, juntar(1, 2, p juntar(1,1,q,r)), encimar (1, 1, juntar(1, 2, s, juntar(1, 1, t, u)), juntar (1, 2, v, juntar(1, 1, w, x))))
+--formula del paper, creo que esto no hace falta porque haskell lo hace solo
+
+-- El dibujo de Escher:
+{-
+escher :: Int -> Escher -> Dibujo Escher
+escher n esch = noneto (esquina(n esch) lado(n esch) esquina(n esch) lado(n esch) dibujoU lado(n esch) esquina(n esch) lado(n esch) esquina(n esch))
+-}
+
+escher :: Int -> Escher -> Dibujo Escher
+escher n esch =
+  noneto 
+    (esquina n esch) (lado n esch) (r270 (esquina n esch))
+    (rotar (lado n esch)) dibujoU  (r270 (lado n esch))
+    (rotar (esquina n esch)) (r180 (lado n esch)) (r180 (esquina n esch))
 
 escherConf :: Conf
 escherConf = Conf {
-    name = "Escher",
-    pic = interp interpBas escher(3, figura True) -- Estan bien estos args?
+    name = "Escher"
+    pic = interp interpBas escher (3, figura True) -- Estan bien estos args?
 }
