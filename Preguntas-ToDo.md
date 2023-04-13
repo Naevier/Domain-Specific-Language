@@ -15,6 +15,12 @@ To Do:
 
 ---- Preguntas
 
+> Demostracion del archivo Dibujo.hs
+> Error en funcion interp usando foldDib
+
+
+
+
 > Establecer la relacion entre Picture (de Gloss) y nuestro Figura? -> Nos permitiria usar el tipo FloatingPic
 > Establecer la relacion entre figuras (de Gloss) y nuestro foldDib?
 > Generalizacion en "filter" de foldDib
@@ -23,8 +29,10 @@ To Do:
 
 
 ---- Informe
-> Uso de GPT (resultados erroneos, contradicciones, explicaciones)
+> Uso de GPT (resultados erroneos, contradicciones, explicaciones buenas y malas, inventa funciones y errores de tipos, etc)
+    --> Bueno para las cosas generales, malo para cuando el contexto es mas especifico (y ojo a las respuestas)
 > Generalizacion en Pred.hs con funciones auxiliarAnyAll y cambioBasica
+> Generalizacion en "filter" de foldDib
 
 
 ---- Ya respondidas

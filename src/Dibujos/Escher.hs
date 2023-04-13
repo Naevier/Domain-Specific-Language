@@ -39,7 +39,7 @@ lado 1 esch = dibujoT esch -- cuarteto(blank, blank, rot45(f), f)
 lado n esch = undefined --  cuarteto(lado(1, f), lado(1, f), rot45(f), f)
 
 -- Por suerte no tenemos que poner el tipo!
-noneto p q r s t u v w x = undefined
+noneto p q r s t u v w x = grilla [[p, q, r], [s, t, u], [v, w, x]]
 
 
 -- El dibujo de Escher:
