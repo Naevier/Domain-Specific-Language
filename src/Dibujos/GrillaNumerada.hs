@@ -13,16 +13,13 @@ import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 type Basica = (Int, Int) -- Coordenadas (x,y)
 
--- Construimos una grilla de tamanio arbitrario
-dibujoGrilla :: Int -> [[Dibujo Basica]]
-dibujoGrilla x = map makeRow [0,1..n]
-    where
-    makeRow :: Int -> [Dibujo Basica]
-    makeRow y = map (figura . (y,)) [0,1..n]
-
--- Imprime el dibujo ya construido
+-- Inserta nuestros numeros en la grilla
 grillanum :: Dibujo Basica
-grillanum = grilla (dibujoGrilla 7)
+grillanum = grilla coords
+
+-- Genera una lista de listas con las n x n coordenadas como dibujos
+coords :: [[Dibujo Basica]]
+coords = map (\num -> map (figura . (num,)) [0,1..7]) [0,1..7]
 
 interpBas :: Output Basica
 interpBas tupla (x, y) _ _ =  translate (x+5) (y+15) $ scale 0.15 0.15 $ text $ show tupla
