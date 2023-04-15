@@ -13,7 +13,6 @@ import Graphics.Gloss.Geometry.Angle (radToDeg)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 -- Definiciones auxiliares para imprimir en pantalla.
-
 type FloatingPic = Vector -> Vector -> Vector -> Picture
 type Output a = a -> FloatingPic
 

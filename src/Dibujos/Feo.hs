@@ -26,13 +26,6 @@ colorear :: Color -> Picture -> Picture
 colorear Azul = color blue
 colorear Rojo = color red
 
--- Las coordenadas que usamos son:
---
---  x + y
---  |
---  x --- x + w
---
--- por ahi deban ajustarlas
 interpBasicaSinColor :: Output BasicaSinColor
 interpBasicaSinColor Rectangulo x y w = line [x, x V.+ y, x V.+ y V.+ w, x V.+ w, x]
 interpBasicaSinColor Cruz x y w = pictures [line [x, x V.+ y V.+ w], line [x V.+ y, x V.+ w]]
@@ -114,7 +107,6 @@ testAll = grilla [
     [flipante1 Rectangulo, flipante2 Rectangulo, figRoja Triangulo  , rotar $ figAzul Triangulo],
     [rotar $ apilados Efe, apilados2 Efe       , juntados Efe       , juntados2 Efe            ]
     ]
-
 
 feoConf :: Conf
 feoConf = Conf {

@@ -118,22 +118,26 @@ foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
         (Float -> Float -> b -> b -> b) -> 
         (b -> b -> b) ->
         Dibujo a -> b
-foldDib figura rotar espejar rot45 apilar juntar encimar (Figura dibu) = figura dibu 
+foldDib figura rotar espejar rot45 apilar juntar encimar (Figura dibu) = 
+    figura dibu 
 
-foldDib figura rotar espejar rot45 apilar juntar encimar (Rotar dibu) = rotar (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)  
+foldDib figura rotar espejar rot45 apilar juntar encimar (Rotar dibu) = 
+    rotar (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)  
 
-foldDib figura rotar espejar rot45 apilar juntar encimar (Espejar dibu) = espejar (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)
+foldDib figura rotar espejar rot45 apilar juntar encimar (Espejar dibu) = 
+    espejar (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)
 
-foldDib figura rotar espejar rot45 apilar juntar encimar (Rot45 dibu) = rot45 (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)
+foldDib figura rotar espejar rot45 apilar juntar encimar (Rot45 dibu) = 
+    rot45 (foldDib figura rotar espejar rot45 apilar juntar encimar dibu)
 
 foldDib figura rotar espejar rot45 apilar juntar encimar (Apilar num1 num2 dib1 dib2) = 
-             apilar num1 num2 (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
-            (foldDib figura rotar espejar rot45 apilar juntar encimar dib2) 
+    apilar num1 num2 (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
+                     (foldDib figura rotar espejar rot45 apilar juntar encimar dib2) 
 
 foldDib figura rotar espejar rot45 apilar juntar encimar (Juntar num1 num2 dib1 dib2) = 
     juntar num1 num2 (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
                      (foldDib figura rotar espejar rot45 apilar juntar encimar dib2)
-                     
+
 foldDib figura rotar espejar rot45 apilar juntar encimar (Encimar dib1 dib2) = 
     encimar (foldDib figura rotar espejar rot45 apilar juntar encimar dib1) 
             (foldDib figura rotar espejar rot45 apilar juntar encimar dib2)
