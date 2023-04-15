@@ -5,23 +5,13 @@ module Interp (
     initial
 ) where
 
-import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, pictures, translate, white, display)
+import Graphics.Gloss
 import Dibujo
 import FloatingPic (FloatingPic, Output, half, grid)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
-{-
-interp :: a -> Vector -> Vector -> Vector -> Picture -> Dibujo a -> Output (Dibujo a) 
-
-interp a v1 v2 v3 pic dib = 
-    foldDib id rotinterp espinterp rot45interp apinterp juntinterp encinterp dib
-
-interp f = 
-    foldDib id rotarInterp espejarInterp rotar45interp apilarInterp juntarInterp encimarInterp
--}
-
+{- -- Version pattern-matching sin usar foldDib
 interp :: Output a -> Output (Dibujo a)
-
 interp f (Figura a) = f a
 interp f (Rotar a) = rotarInterp (interp f a)
 interp f (Rot45 a) = rotar45interp (interp f a)
@@ -29,6 +19,10 @@ interp f (Espejar a) = espejarInterp (interp f a)
 interp f (Apilar x y a b) = apilarInterp x y (interp f a) (interp f b)
 interp f (Juntar x y a b) = juntarInterp x y (interp f a) (interp f b)
 interp f (Encimar a b) = encimarInterp (interp f a) (interp f b)
+-}
+
+interp :: Output a -> Output (Dibujo a) 
+interp output = foldDib output rotarInterp espejarInterp rotar45interp apilarInterp juntarInterp encimarInterp
 
 rotarInterp :: FloatingPic -> FloatingPic
 rotarInterp f x w h = f (x V.+ w) h (V.negate w)
@@ -38,7 +32,7 @@ rotar45interp f x w h =
     f (x V.+ half(w V.+ h)) (half (w V.+ h)) (half (h V.- w))
 
 espejarInterp :: FloatingPic -> FloatingPic
-espejarInterp f x w h = f (x V.+ w) (V.negate w) h
+espejarInterp f x w = f (x V.+ w) (V.negate w)
 
 apilarInterp :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
 apilarInterp n m f g x w h = pictures [f (x V.+ h') w (r V.* h), g x w h']

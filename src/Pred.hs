@@ -1,37 +1,33 @@
 module Pred (
     Pred,
-    cambiar, anyDib, allDib, orP, andP, foldGen
+    cambiar, anyDib, allDib, orP, andP, auxiliarAnyAll
 ) where
 
+import Dibujo
 type Pred a = a -> Bool
 
 -- Generalizacion de un fold a bool para dibujos
-auxiliarAnyAll :: Pred a -> (a -> Bool) -> Dibujo a -> Bool
-auxiliarAnyAll pred func dibujo = foldGen (pred dibujo) (pred dibujo) 
-            (pred dibujo) (pred dibujo) apilar_juntar apilar_juntar caso_encimar
-    where
-        apilarJuntar :: (a -> Bool) -> Pred a -> Float -> Float -> Dibujo a -> Dibujo a -> Bool
-        apilarJuntar func pred _ _ dibu1 dibu2 = func (pred dibu1) (pred dibu2)
+auxiliarAnyAll :: Pred a -> (Bool -> Bool -> Bool) -> Dibujo a -> Bool
+auxiliarAnyAll predicado funcionBooleana = foldDib predicado id id id (\ _ _ a b -> funcionBooleana a b) (\ _ _ a b -> funcionBooleana a b) funcionBooleana
 
-        casoEncimar :: (a -> Bool) -> Pred a ->  Dibujo a -> Dibujo a -> Bool
-        casoEncimar func pred dibu1 dibu2 = func (pred dibu1) (pred dibu2) 
-
--- Cambio de figura básica por otra figura basica
-cambioBasica :: Dibujo a -> a -> Dibujo a
-cambioBasica (Figura a) basica = Figura basica
+-- Intento de generalizacion para
+--auxiliarAnyAll :: (a -> b) -> (a -> a -> a) -> Dibujo a -> b
+--auxiliarAnyAll func_pred func2 = foldDib func_pred id id id (\ _ _ a b -> func2 a b) (\ _ _ a b -> func2 a b) func2
 
 -- Dado un predicado sobre básicas, cambiar todas las que satisfacen
 -- el predicado por la figura básica indicada por el segundo argumento
+-- Generalizada para aplicar cualquier funcion al 
+-- encontrar una basica que cumpla el predicado
 cambiar :: Pred a -> (a -> Dibujo a) -> Dibujo a -> Dibujo a
-cambiar predicado cambioBasica dibujo = 
-    mapDib(if predicado dibujo then cambioBasica dibujo else dibujo) dibujo
+cambiar predicado func = mapDib (\x -> if predicado x then func x else figura x) 
 
 -- Alguna básica satisface el predicado.
 anyDib :: Pred a -> Dibujo a -> Bool
-anyDib pred dibujo = auxiliarAnyAll pred (||)
+anyDib pred = auxiliarAnyAll pred (||)
+
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool 
-allDib pred dibu = auxiliarAnyAll pred (&&)  
+allDib pred = auxiliarAnyAll pred (&&)
 
 -- Los dos predicados se cumplen para el elemento recibido.
 andP :: Pred a -> Pred a -> a -> Bool
