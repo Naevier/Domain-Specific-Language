@@ -51,9 +51,21 @@ testR270 =
             (r270 (figura "Cuadrado")))
 
 
+-- Test figuras (incluye folddib)
+testFiguras = TestCase(assertEqual "Test figuras y foldDib" ["Cuadrado", "Circulo"] 
+                (figuras (Apilar 1.0 1.0 (Figura "Cuadrado") (Figura "Circulo"))))
+
+-- Test MapDib
+testMapDib = TestCase (assertEqual "Test mapDib" (encimar (figura 4) (figura 2)) 
+                    (mapDib (+2) (encimar (figura 2) (figura 0))))
+
+-- Test ciclar
+testCiclar = TestCase (assertEqual "Test ciclar" (cuarteto (Figura "Cuadrado") 
+                (rotar (Figura "Cuadrado")) (r180 (Figura "Cuadrado")) (r270 (Figura "Cuadrado"))) 
+                (ciclar (figura "Cuadrado")))
+
 
 testDibujo = 
-    TestList [testFigura, testRotar, testEspejar, testRotar45, testApilar, testJuntar, testComp, testR180, testR270]
+    TestList [testFigura, testRotar, testEspejar, testRotar45, testApilar, testJuntar, testComp, testR180, testR270, testFiguras, testMapDib, testCiclar]
 
 main = runTestTT testDibujo
-

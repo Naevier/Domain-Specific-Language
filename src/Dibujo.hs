@@ -107,9 +107,6 @@ mapDib func (Juntar num1 num2 fig1 fig2) =
 mapDib func (Encimar fig1 fig2) = 
     Encimar (mapDib func fig1) (mapDib func fig2)
 
--- Verificar que satisfaga la siguiente igualdad:
--- mapDib figura = id (id es la funcion identidad)
-
 -- Estructura general para la semántica (a no asustarse). Ayuda: 
 -- pensar en foldr y las definiciones de Intro a la lógica
 -- foldDib aplicado a cada constructor de Dibujo deberia devolver el mismo dibujo
@@ -152,10 +149,35 @@ Como figura :: a -> Dibujo a
 Al aplicarle la funcion "figura" a todos los elementos de un dibujo, no se realiza
 ninguna modificacion en el mismo, pues como "a" es del tipo Dibujo sus "hojas" 
 son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento.
+
+
+
+mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+mapDib figura = id 
+caso base: 
+    mapDib figura Borrar = id Borrar
+    id Borrar = Borrar
+
+caso inductivo: 
+    mapDib figura (Figura fig) = id (Figura fig)
+    id (Figura fig) = Figura fig
+    mapDib figura (Rotar fig) = id (Rotar fig)
+    id (Rotar fig) = Rotar fig
+    mapDib figura (Espejar fig) = id (Espejar fig)
+    id (Espejar fig) = Espejar fig
+    mapDib figura (Rot45 fig) = id (Rot45 fig)
+    id (Rot45 fig) = Rot45 fig
+    mapDib figura (Apilar num1 num2 fig1 fig2) = id (Apilar num1 num2 fig1 fig2)
+    id (Apilar num1 num2 fig1 fig2) = Apilar num1 num2 fig1 fig2
+    mapDib figura (Juntar num1 num2 fig1 fig2) = id (Juntar num1 num2 fig1 fig2)
+    id (Juntar num1 num2 fig1 fig2) = Juntar num1 num2 fig1 fig2
+    mapDib figura (Encimar fig1 fig2) = id (Encimar fig1 fig2)
+    id (Encimar fig1 fig2) = Encimar fig1 fig2
+
 -}
 
--- Junta todas las figuras básicas de un dibujo.
 
+-- Junta todas las figuras básicas de un dibujo.
 figuras :: Dibujo a -> [a]
 figuras dibu = 
     foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu

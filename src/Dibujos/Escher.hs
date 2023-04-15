@@ -60,5 +60,5 @@ interpBas True a b c = pictures [line $ triangulo a b c, cara a b c]
 escherConf :: Conf
 escherConf = Conf {
     name = "Escher",
-    pic = interp interpBas (escher 3 True)
+    pic = interp interpBas (escher 7 True)
 }

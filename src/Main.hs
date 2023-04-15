@@ -11,6 +11,29 @@ import Dibujos.Feo (feoConf)
 import Dibujos.GrillaNumerada (grillaConf)
 import Dibujos.Escher (escherConf)
 
+{-
+import System.Environment (getArgs)
+
+main :: IO ()
+main = do
+  args <- getArgs
+  case args of
+    ["--list"] -> listarDibujos
+    _ -> putStrLn "Comando no reconocido"
+
+listarDibujos :: IO ()
+listarDibujos = do
+  nombres <- getNombresDibujos
+  putStrLn "Dibujos disponibles:"
+  mapM_ putStrLn nombres
+
+getNombresDibujos :: IO [String]
+getNombresDibujos = do
+  nombres <- getDirectoryContents "dibujos"
+  return $ filter (".hs" `isSuffixOf`) nombres
+
+-}
+
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
 configs = [ejemploConf, feoConf, grillaConf, escherConf]
@@ -19,6 +42,13 @@ configs = [ejemploConf, feoConf, grillaConf, escherConf]
 initial' :: [Conf] -> String -> IO ()
 initial' [] n = do
     putStrLn $ "No hay un dibujo llamado " ++ n
+initial' (c : cs) "--lista" =
+    do
+    putStrLn "Dibujos disponibles: "
+    mapM_ (\c -> putStrLn $ "  " ++ name c) configs
+    putStrLn "Seleccione el dibujo a imprimir"
+    n <- getLine
+    initial' configs n
 initial' (c : cs) n = 
     if n == name c then
         initial c 400
@@ -29,3 +59,4 @@ main :: IO ()
 main = do
     args <- getArgs
     initial' configs $ head args
+    
