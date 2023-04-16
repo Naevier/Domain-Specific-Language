@@ -6,8 +6,8 @@
 
 #### Integrantes:
 
-- Integrante 1
-- Adragna Javier Martin
+- Eleonora Constanza Gómez Vera
+- Adragna Javier Martín
 - Gonzalía Alvaro Tomas
 
 ## Laboratorio de programación funcional

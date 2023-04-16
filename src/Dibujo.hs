@@ -3,7 +3,6 @@
 -- para ser utilizadas en otros modulos
 
 module Dibujo where
-
 {-
 Gramática de las figuras:
 <Fig> ::= Figura <Bas> | Rotar <Fig> | Espejar <Fig> | Rot45 <Fig>
@@ -13,12 +12,12 @@ Gramática de las figuras:
 -}
 
 data Dibujo a =  Borrar
-        | Figura (a)
+        | Figura a
         | Rotar (Dibujo a) -- Rotar 90
         | Espejar (Dibujo a)
         | Rot45 (Dibujo a)
-        | Apilar (Float) (Float) (Dibujo a) (Dibujo a)
-        | Juntar (Float) (Float) (Dibujo a) (Dibujo a)
+        | Apilar Float Float (Dibujo a) (Dibujo a)
+        | Juntar Float Float (Dibujo a) (Dibujo a)
         | Encimar (Dibujo a) (Dibujo a)
         deriving (Eq, Show)
 
@@ -93,10 +92,9 @@ ciclar fig = cuarteto fig (rotar fig) (r180 fig) (r270 fig)
 
 -- map para nuestro lenguaje 
 -- (para cada constructor de datos, del constructor de tipos Dibujo)
-{- Cambiamos Dibujo b por b. CHARLARLO -}
-mapDib :: (a -> b) -> Dibujo a -> Dibujo b
+mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
 mapDib func Borrar = Borrar
-mapDib func (Figura fig) = Figura (func fig)
+mapDib func (Figura fig) =  func fig
 mapDib func (Rotar fig) = Rotar (mapDib func fig)
 mapDib func (Espejar fig) = Espejar (mapDib func fig)
 mapDib func (Rot45 fig) = Rot45 (mapDib func fig)
@@ -140,47 +138,103 @@ foldDib figura rotar espejar rot45 apilar juntar encimar (Encimar dib1 dib2) =
             (foldDib figura rotar espejar rot45 apilar juntar encimar dib2)
     
 
--- Demostrar que `mapDib figura = id`
--- mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
+
 {-
-Sea mapDib figura = id entonces
-
-Como figura :: a -> Dibujo a
-Al aplicarle la funcion "figura" a todos los elementos de un dibujo, no se realiza
-ninguna modificacion en el mismo, pues como "a" es del tipo Dibujo sus "hojas" 
-son Figuras, por tanto "figura" devuelve el mismo dibujo que toma como argumento.
+Demostrar que `mapDib figura = id`
 
 
+Caso base: mapDib figura Borrar
+Trivial, por definicion de mapDib Borrar = id Borrar = Borrar
+Por lo tanto, la base de la inducción se cumple.
 
-mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
-mapDib figura = id 
-caso base: 
-    mapDib figura Borrar = id Borrar
-    id Borrar = Borrar
+Caso inductivo:
+Hipotesis inductiva: mapDib figura fig = id fig
 
-caso inductivo: 
-    mapDib figura (Figura fig) = id (Figura fig)
-    id (Figura fig) = Figura fig
-    mapDib figura (Rotar fig) = id (Rotar fig)
-    id (Rotar fig) = Rotar fig
-    mapDib figura (Espejar fig) = id (Espejar fig)
-    id (Espejar fig) = Espejar fig
-    mapDib figura (Rot45 fig) = id (Rot45 fig)
-    id (Rot45 fig) = Rot45 fig
-    mapDib figura (Apilar num1 num2 fig1 fig2) = id (Apilar num1 num2 fig1 fig2)
-    id (Apilar num1 num2 fig1 fig2) = Apilar num1 num2 fig1 fig2
-    mapDib figura (Juntar num1 num2 fig1 fig2) = id (Juntar num1 num2 fig1 fig2)
-    id (Juntar num1 num2 fig1 fig2) = Juntar num1 num2 fig1 fig2
-    mapDib figura (Encimar fig1 fig2) = id (Encimar fig1 fig2)
-    id (Encimar fig1 fig2) = Encimar fig1 fig2
+Debemos comprobar que vale para cada figura
 
+-- Caso figura
+mapDib figura (Figura fig) 
+    = {- caso Figura -}
+        Figura (figura fig)
+    = {- Definición de mapDib -}
+        Figura (id fig)
+    = {- Definición de figura -}
+        Figura fig
+
+id (Figura fig)
+    {- por definición de id -}
+    = Figura fig   
+
+-- Caso rotar
+mapDib figura (Rotar fig)               
+    = {- Definicion de mapDib -}   
+        Rotar (mapDib figura fig)
+    = {- por hip inductiva -}
+        Rotar (id fig)         
+    = {- por hipótesis de id-}
+        Rotar fig                      
+
+id (Rotar fig)
+    = {- por definición de id -}
+        = Rotar fig                       
+
+-- Caso espejar
+mapDib figura (Espejar fig)
+    = {- por definición de mapDib -}
+        Espejar (mapDib figura fig)  
+    = {- por hipótesis de inducción -}
+        Espejar (id fig)     
+    = {- por definición de id -}          
+        Espejar fig       
+
+id (Espejar fig)
+    = {- por def de id-}
+    Espejar fig                    
+
+-- Caso apilar
+mapDib figura (Apilar v fig1 fig2)
+    = {- por definición de mapDib-}
+        Apilar v (mapDib figura fig1) (mapDib figura fig2)   
+    = {- por hipótesis inductiva -}
+        Apilar v (id fig1) (id fig2)                
+    = {- por definición de id -}           
+        Apilar v fig1 fig2              
+
+id (Apilar v fig1 fig2)
+    = {- por definición de id-}
+        Apilar v fig1 fig2                                   
+
+-- Caso juntar
+mapDib figura (Juntar h fig1 fig2)                              
+    = {- por definición de mapDib-}                              
+        Juntar h (mapDib figura fig1) (mapDib figura fig2)  
+    = {- por hipótesis de inducción-} 
+        Juntar h (id fig1) (id fig2)          
+    = {- por definición de id-}                
+        Juntar h fig1 fig2         
+
+id (Juntar h fig1 fig2)
+    = {- por definición de id -}
+    Juntar h fig1 fig2                                    
+
+-- Caso encimar
+mapDib figura (Encimar fig1 fig2)
+    = {- por definición de mapDib-}
+        Encimar (mapDib figura fig1) (mapDib figura fig2)   
+    = {-   por hipótesis de inducción -}
+        Encimar (id fig1) (id fig2)           
+    = {-  -- por definición de id-}              
+        Encimar fig1 fig2      
+
+id (Encimar fig1 fig2)
+    = {- por definición de id -}
+        Encimar fig1 fig2                                    
 -}
-
 
 -- Junta todas las figuras básicas de un dibujo.
 figuras :: Dibujo a -> [a]
-figuras dibu = 
-    foldDib casoFigura id id id casoConcat casoConcat casoEncimar dibu
+figuras = 
+    foldDib casoFigura id id id casoConcat casoConcat casoEncimar
         where
             casoFigura :: a -> [a]
             casoFigura fig = [fig]
