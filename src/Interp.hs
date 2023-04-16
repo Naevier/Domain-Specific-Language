@@ -5,7 +5,7 @@ module Interp (
     initial
 ) where
 
-import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, Vector, pictures, translate, white, display)
+import Graphics.Gloss
 import Dibujo
 import FloatingPic (FloatingPic, Output, half, grid)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V

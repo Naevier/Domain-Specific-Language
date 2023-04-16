@@ -3,24 +3,26 @@ import Dibujo
 import Test.HUnit
 
 -- Test cambiar
-testCambiar = TestCase(assertEqual "Test cambiar" () (cambiar))
+testCambiar = TestCase(assertEqual "Test cambiar" (figura 2) 
+    (cambiar (==1) (const (figura 2)) (figura 1)))
 
 -- Test AnyDib
 testAnyDib = TestCase(assertEqual "Test anyDib" True 
-                     (anyDib (==1) (encimar (Dibujo 1) (Dibujo 2))))
+    (anyDib (== "Cuadrado") (encimar (Figura "Cuadrado") (Figura "Circulo"))))
 
 -- Test AllDib
-testAllDib = TestCase(assertEqual "Test allDib" False (allDib (==1) 
-                     (encimar (Dibujo 1) (Dibujo 2)))) 
+testAllDib = TestCase(assertEqual "Test allDib" False (allDib (=="Triangulo") 
+    (encimar (Figura "Cuadrado") (Figura "Triangulo")))) 
 
--- Test AndP
-testAndP = TestCase(assertEqual "Test andP" False (andP (==1) (==2) 2))
+-- Test AndP (usa auxiliarAnyAll)
+testAndP = TestCase(assertEqual "Test andP" False (andP (=="Triangulo") 
+    (=="Cuadrado con formas raras") "Cuadrado con formas raras"))
 
--- Test orP
-testOrP = TestCase(assertEqual "Test orP" True (orP (== 1) (==2) 2))
-
+-- Test orP (usa auxiliarAnyAll)
+testOrP = TestCase(assertEqual "Test orP" True 
+    (orP (== "Octogono") (=="Figura rara") "Figura rara"))
 
 testPred = 
-    TestList [testCambiar, testAnyDib, testAllDib, testandP, testorP]
+    TestList [testCambiar, testAnyDib, testAllDib, testAndP, testOrP]
 
 main = runTestTT testPred

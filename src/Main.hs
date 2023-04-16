@@ -4,35 +4,11 @@ import Data.Maybe (fromMaybe)
 import System.Console.GetOpt (ArgDescr(..), ArgOrder(..), OptDescr(..), getOpt)
 import System.Environment (getArgs)
 import Text.Read (readMaybe)
-
 import Interp (Conf(name), initial)
 import Dibujos.Ejemplo (ejemploConf)
 import Dibujos.Feo (feoConf)
 import Dibujos.GrillaNumerada (grillaConf)
 import Dibujos.Escher (escherConf)
-
-{-
-import System.Environment (getArgs)
-
-main :: IO ()
-main = do
-  args <- getArgs
-  case args of
-    ["--list"] -> listarDibujos
-    _ -> putStrLn "Comando no reconocido"
-
-listarDibujos :: IO ()
-listarDibujos = do
-  nombres <- getNombresDibujos
-  putStrLn "Dibujos disponibles:"
-  mapM_ putStrLn nombres
-
-getNombresDibujos :: IO [String]
-getNombresDibujos = do
-  nombres <- getDirectoryContents "dibujos"
-  return $ filter (".hs" `isSuffixOf`) nombres
-
--}
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
@@ -59,4 +35,3 @@ main :: IO ()
 main = do
     args <- getArgs
     initial' configs $ head args
-    

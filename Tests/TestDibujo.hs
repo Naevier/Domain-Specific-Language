@@ -56,8 +56,7 @@ testFiguras = TestCase(assertEqual "Test figuras y foldDib" ["Cuadrado", "Circul
                 (figuras (Apilar 1.0 1.0 (Figura "Cuadrado") (Figura "Circulo"))))
 
 -- Test MapDib
-testMapDib = TestCase (assertEqual "Test mapDib" (encimar (figura 4) (figura 2)) 
-                    (mapDib (+2) (encimar (figura 2) (figura 0))))
+testMapDib = TestCase (assertEqual "Test mapDib" (Figura "Cuadrado") (mapDib figura (Figura "Cuadrado")))
 
 -- Test ciclar
 testCiclar = TestCase (assertEqual "Test ciclar" (cuarteto (Figura "Cuadrado") 
