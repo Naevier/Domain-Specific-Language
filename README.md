@@ -41,7 +41,7 @@ where the argument (`Escher` in the example) represents the name of the drawing 
 
 _The complete list of available drawings can be consulted by using `--lista` as argument._
 
-<img src="https://cdn.discordapp.com/attachments/924766841837068290/1099400998059004035/image.png?ex=65f5e477&is=65e36f77&hm=0954f1c00352fa88ccac823d0640327be23387abfe9e042ea6962f2729336d58&" alt="Escher drawing image" width="350"/>
+<img src=src/Dibujos/escher.png alt="Escher drawing image" width="350"/>
 
 > Escher drawing
 
